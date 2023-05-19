@@ -1,8 +1,8 @@
-name: Deploy to Railway Dev Env
+name: Deploy to Railway Prod env
 
 on:
-  push:
-    branches: [development]
+  pull_request:
+    branches: [master]
 
 jobs:
   build-and-test:
@@ -47,9 +47,9 @@ jobs:
         run: |
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_DEV }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT_DEV }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST_DEV }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_PROD }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT_PROD }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST_PROD }}" >> $GITHUB_ENV
 
       - name: Run db migrate
         run: npm run migrate
@@ -60,4 +60,4 @@ jobs:
       - name: Deploy
         run: railway up
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_DEV_TOKEN }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PROD_TOKEN }}
