@@ -1,0 +1,17 @@
+[
+  {
+    "uuid": "76bdd110-a98e-46fc-b806-a984e8ca6919",
+    "name": "product test",
+    "quantity": 200,
+    "components_used": [
+      {
+        "uuid": "6489f03c-32be-42be-9177-82220c1f913b",
+        "name": "rtx 123",
+        "description": "best vga for laptop",
+        "product_components": {
+          "uuid": "f4f15991-6300-4915-9c7b-1738d5d45f32"
+        }
+      }
+    ]
+  }
+]

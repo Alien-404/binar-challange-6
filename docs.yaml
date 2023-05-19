@@ -1,0 +1,1610 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 4xwtbu7a4e3gr
+info:
+  title: Manufaktur Binar
+  version: "1.0"
+  description: RESTFull api challange 5 dengan orm sequelize dan database postgres
+  contact:
+    name: Rico
+    url: rinaru.com
+    email: rico@gmail.com
+servers:
+  - url: "http://localhost:3000"
+paths:
+  /auth/register:
+    post:
+      summary: create User
+      operationId: Auth-Register
+      responses:
+        "201":
+          description: User Created
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: success
+                    data:
+                      name: admin
+                      email: admin@gmail.com
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: admin
+                      email:
+                        type: string
+                        example: admin@gmail.com
+                        format: email
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: false
+                    message: string
+                    data: null
+                properties:
+                  status:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                    example: "please provide a name. email, and password"
+                  data:
+                    type: string
+                    example: "null"
+                    nullable: true
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: false
+                    message: "user with ${email} already exist!"
+                    data: null
+                properties:
+                  status:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                    example: "user with ${email} already exist!"
+                  data:
+                    type: string
+                    example: "null"
+                    nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+            examples:
+              create user naru:
+                value:
+                  name: naru
+                  email: naru@gmail.com
+                  password: qwerty
+        description: submit the user data
+      description: Create a new user
+      tags:
+        - Auth
+    parameters: []
+  /auth/login:
+    post:
+      summary: get token
+      operationId: Auth-Login
+      responses:
+        "200":
+          description: Succesful login and return token
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: success
+                    data: sas
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: false
+                    message: please provide email and password
+                    data: null
+                properties:
+                  status:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                    example: please provide email and password
+                  data:
+                    type: string
+                    example: "null"
+                    nullable: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Foribiden"
+        "404":
+          $ref: "#/components/responses/Credential"
+      tags:
+        - Auth
+      description: login to get tokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  email: naru@gmail.com
+                  password: qwerty
+              properties:
+                email:
+                  type: string
+                  example: naru@gmail.com
+                password:
+                  type: string
+                  example: qwerty
+  /supplier:
+    get:
+      summary: get all suppliers
+      tags:
+        - Suppliers
+      responses:
+        "200":
+          description: Succesful get all suppliers
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: success
+                    data:
+                      - uuid: bc4636e0-6dee-4abb-be6b-833da7ef0c63
+                        name: nvidia
+                        address: jakarta barat
+                        supplied_components:
+                          - uuid: 6489f03c-32be-42be-9177-82220c1f913b
+                            name: rtx 3080
+                            description: best vga for laptop by nvidia
+                            component_suppliers:
+                              uuid: 7d85ebaa-b52f-4360-93f3-4c4b9e434a51
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        supplied_components:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              uuid:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              description:
+                                type: string
+                              component_suppliers:
+                                type: object
+                                properties:
+                                  uuid:
+                                    type: string
+                                    format: uuid
+      operationId: get-supplier
+      description: get all suppliers data
+      security:
+        - Authorization: []
+    post:
+      summary: create supplier
+      operationId: post-supplier
+      responses:
+        "200":
+          description: Succesful get all suppliers
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - x-stoplight:
+                      id: qju9rnre4msty
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: bd9gh2f44rfuf
+                        example: created
+                      data:
+                        type: array
+                        x-stoplight:
+                          id: ffsmls0cf0fr6
+                        items:
+                          x-stoplight:
+                            id: jo37llg3ie3b8
+                          oneOf:
+                            - $ref: "#/components/schemas/Supplier"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: false
+                    message: please provide name and address
+                    data: null
+                properties:
+                  status:
+                    type: boolean
+                    default: false
+                  message:
+                    type: string
+                    example: please provide name and address
+                  data:
+                    type: string
+                    example: "null"
+                    nullable: true
+      tags:
+        - Suppliers
+      description: create new supplier
+      requestBody:
+        $ref: "#/components/requestBodies/Supplier"
+      security:
+        - Authorization: []
+    parameters: []
+  "/supplier/{supplier_uuid}":
+    get:
+      summary: get single supplier
+      tags:
+        - Suppliers
+      responses:
+        "200":
+          description: Succesful get supplier
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: success
+                    data:
+                      uuid: bc4636e0-6dee-4abb-be6b-833da7ef0c63
+                      name: nvidia
+                      address: jakarta barat
+                      supplied_components:
+                        - uuid: 6489f03c-32be-42be-9177-82220c1f913b
+                          name: rtx 3080
+                          description: best vga for laptop by nvidia
+                          component_suppliers:
+                            uuid: 7d85ebaa-b52f-4360-93f3-4c4b9e434a51
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      address:
+                        type: string
+                      supplied_components:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            component_suppliers:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                  format: uuid
+      operationId: get-supplier-supplier_uuid
+      description: get single supplier data
+      security:
+        - Authorization: []
+    parameters:
+      - $ref: "#/components/parameters/supplier_uuid"
+    put:
+      summary: update supplier
+      operationId: put-supplier-supplier_uuid
+      responses:
+        "200":
+          description: Succesful update supplier
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: orte51gypmg6n
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: oqtdy748eenpp
+                        example: "null"
+                        nullable: true
+        "404":
+          description: cant find supplier uuid
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: sqipr2tqvrl9u
+                    properties:
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: i5g2a7rilce1r
+                        example: "can't find supplier with uuid ${supplier_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: a4zdry1x9z08s
+                        default: false
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: p70dw5r5v2enk
+                        example: "null"
+                        nullable: true
+      description: update supplier data
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: "#/components/requestBodies/Supplier"
+      tags:
+        - Suppliers
+    delete:
+      summary: delete supplier
+      operationId: delete-supplier-supplier_uuid
+      responses:
+        "200":
+          description: Succesful deleted supplier
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: pw7h0kko6plh9
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: t0cvky398wiiz
+                        example: "null"
+                        nullable: true
+        "404":
+          description: cant find supplier uuid
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 3qsnxh02mhxj9
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: ijrez56t99tiq
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: s9yhocc9lfuwt
+                        example: "can't find supplier with uuid ${supplier_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: jagqayv1dxuem
+                        default: false
+      tags:
+        - Suppliers
+      description: delete supplier with uuid
+      security:
+        - Authorization: []
+  "/supplier/{supplier_uuid}/components":
+    parameters:
+      - schema:
+          type: string
+        name: supplier_uuid
+        in: path
+        required: true
+    post:
+      summary: create procurement
+      operationId: post-supplier-supplier_uuid-components
+      responses:
+        "200":
+          description: Succesfull restock component by supplier
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: cgtp07a26668y
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: ss0k42tzotmpz
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: cjpr4k6xfcmds
+                        example: components added!
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: vu0e78l0vk05w
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: 3gvyqlopq2wqz
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: n6ekg34iuktyc
+                        example: components_uuid must be array type!
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: duct2b2zumle4
+                        default: false
+      description: create procurement or restock product by supplier
+      tags:
+        - Suppliers
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                components_uuid:
+                  type: array
+                  x-stoplight:
+                    id: 2z8vt81ly2bx3
+                  items:
+                    x-stoplight:
+                      id: n3pbgipmmo32v
+                    type: string
+                    format: uuid
+  "/supplied_component/{supplied_components_uuid}":
+    parameters:
+      - $ref: "#/components/parameters/supplied_components_uuid"
+    delete:
+      summary: delete procurement
+      operationId: delete-supplied_component-supplied_components_uuid
+      responses:
+        "200":
+          description: Succesfull delete procurement supplied
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: h69qttq92adta
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: woffpw9b1rlqz
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 8c1eqbngoktrk
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: kkune6v8fqjq4
+                        example: "null"
+                        nullable: true
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: whb4510ip537h
+                        default: false
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: bqikf0guq78ra
+                        example: "can't find supplied_components with uuid ${supplied_components_uuid}!"
+      description: delete procurement or compenent stock by supplier
+      tags:
+        - Suppliers
+      security:
+        - Authorization: []
+  /component:
+    get:
+      summary: get all components
+      tags:
+        - Components
+      responses:
+        "200":
+          description: Succesfull get all components
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: ng36865omfree
+                    properties:
+                      data:
+                        type: array
+                        x-stoplight:
+                          id: e8fd2x53btxrl
+                        items:
+                          x-stoplight:
+                            id: 68vgflm4yx4ga
+                          oneOf:
+                            - $ref: "#/components/schemas/Component"
+      operationId: get-component
+      description: get all data components
+      security:
+        - Authorization: []
+    post:
+      summary: create component
+      operationId: post-component
+      responses:
+        "201":
+          description: Succesful created component
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: ox5mtad0plsf4
+                    properties:
+                      data:
+                        type: array
+                        x-stoplight:
+                          id: ef4uupqrewwaw
+                        items:
+                          x-stoplight:
+                            id: wpz1iji7fww2o
+                          oneOf:
+                            - $ref: "#/components/schemas/Component"
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: kc31lkgxqjluj
+                        example: created
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: b984rpl9j4ac7
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: ow3q057y1krl1
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: pr0vkt0j9styc
+                        example: please provide name and description!
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: uqwx6u6lvj6o5
+                        default: false
+      requestBody:
+        $ref: "#/components/requestBodies/Component"
+      description: create or add component
+      tags:
+        - Components
+      security:
+        - Authorization: []
+  "/component/{component_uuid}":
+    parameters:
+      - $ref: "#/components/parameters/component_uuid"
+    get:
+      summary: get single component
+      tags:
+        - Components
+      responses:
+        "200":
+          description: Succesful get component
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: f7gfdce9ihuln
+                    properties:
+                      data:
+                        x-stoplight:
+                          id: 064migdteauqs
+                        oneOf:
+                          - $ref: "#/components/schemas/Component"
+      operationId: get-component-component_uuid
+      description: get single data component
+      security:
+        - Authorization: []
+    put:
+      summary: update component
+      operationId: put-component-component_uuid
+      responses:
+        "200":
+          description: Succesful update component
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: vvbokq52wusx4
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: e1em6j1ijjrch
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: y5z83qy754ci6
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: lcgen2yoi2k43
+                        example: "null"
+                        nullable: true
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: t17ndq456hvd2
+                        default: false
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: 03phfg8k20ih4
+                        example: "can't find component with uuid ${component_uuid}!"
+      tags:
+        - Components
+      description: update component data
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: "#/components/requestBodies/Component"
+    delete:
+      summary: delete component
+      operationId: delete-component-component_uuid
+      responses:
+        "200":
+          description: Succesfull deleted component
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: hkh1g2j2162wh
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: fq7ae2d3atgfa
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: oko8kmkbh8rer
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: iy3iukfsvrsv4
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: p3p4cpgvy8j05
+                        example: "can't find component with uuid ${component_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: ryxeqgkd2922b
+                        default: false
+      tags:
+        - Components
+      description: delete component data
+      security:
+        - Authorization: []
+  /product:
+    get:
+      summary: get all products
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Succesful get products
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: x4q1k8n0ohio0
+                    properties:
+                      data:
+                        type: array
+                        x-stoplight:
+                          id: 5ful3795hw04i
+                        items:
+                          x-stoplight:
+                            id: 3h7eyu6pz52es
+                          oneOf:
+                            - $ref: "#/components/schemas/Product"
+                            - type: object
+                              x-stoplight:
+                                id: sifb872khcc3m
+                              properties:
+                                components_used:
+                                  type: array
+                                  x-stoplight:
+                                    id: wp9js96i1jcup
+                                  items:
+                                    x-stoplight:
+                                      id: k9cw1d7q64nti
+                                    allOf:
+                                      - $ref: "#/components/schemas/Component"
+                                      - type: object
+                                        x-stoplight:
+                                          id: 46nwc7om1sagb
+                                        properties:
+                                          product_components:
+                                            type: object
+                                            x-stoplight:
+                                              id: 2l5u7piq9sstx
+                                            properties:
+                                              uuid:
+                                                type: string
+                                                x-stoplight:
+                                                  id: 5w1myyop4hdog
+                                                format: uuid
+      operationId: get-product
+      description: get all products data
+      security:
+        - Authorization: []
+    post:
+      summary: create product
+      operationId: post-product
+      responses:
+        "201":
+          description: Succesful created product
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 0fs6u7k307imx
+                    properties:
+                      data:
+                        x-stoplight:
+                          id: sgkczych30e7l
+                        oneOf:
+                          - $ref: "#/components/schemas/Product"
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: 0tugt0hvwmwdd
+                        example: created
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 43zkin4tb2zwu
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: p7hjpc80i52me
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: es8tskli3b39p
+                        example: "please provide name, quantity, and components_name(array)!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: 595nib5l3pldc
+                        default: false
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 1w9avwgwus20u
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: a5vg9nhay6ixv
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: em1lt8w961t5y
+                        example: please enter the registered component name at least 1!
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: xr1zrejjqse8d
+                        default: false
+      tags:
+        - Products
+      requestBody:
+        $ref: "#/components/requestBodies/Product"
+      description: create or add product
+      security:
+        - Authorization: []
+  "/product/{product_uuid}":
+    parameters:
+      - $ref: "#/components/parameters/product_uuid"
+    put:
+      summary: update product
+      operationId: put-product-product_uuid
+      responses:
+        "200":
+          description: Succesfull updated product data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: my8o8o8recs92
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: hjn7lih429pmo
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: umpkixi8zhdqj
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: v33lp905wupv1
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: 531avgjsbmgo5
+                        example: "can't find product with uuid ${product_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: jvaysxo4tp19r
+                        default: false
+      tags:
+        - Products
+      description: update product data
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  uuid: 9acbe1de-347d-4b86-828b-4945796b873f
+                  name: rog strix g17
+                  quantity: 420
+              properties:
+                name:
+                  type: string
+                quantity:
+                  type: integer
+                  minimum: 0
+        description: product schema
+    delete:
+      summary: delete product
+      operationId: delete-product-product_uuid
+      responses:
+        "200":
+          description: Succesfull deleted product
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 2uz5qfl5kjrlq
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: qfpsqf9nbuik1
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 11j72aao9bpla
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: i63vzg94ydiay
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: vedjrnw25xl03
+                        example: "can't find product with uuid ${product_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: i08y0oi3wvzc6
+                        default: false
+      tags:
+        - Products
+      description: delete product data
+      security:
+        - Authorization: []
+    get:
+      summary: get single product
+      operationId: get-product-product_uuid
+      responses:
+        "200":
+          description: Succesfull get product
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: success
+                    data:
+                      uuid: 9acbe1de-347d-4b86-828b-4945796b873f
+                      name: rog strix g17
+                      quantity: 420
+                      components_used:
+                        - uuid: 6489f03c-32be-42be-9177-82220c1f913b
+                          name: rtx 3080
+                          description: best vga for laptop by nvidia
+                          product_components:
+                            uuid: 95ab52ed-679b-467a-909c-50087af28e43
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      quantity:
+                        type: integer
+                      components_used:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            product_components:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                  format: uuid
+      tags:
+        - Products
+      description: get single data product
+      security:
+        - Authorization: []
+  "/product/{product_uuid}/componts":
+    parameters:
+      - $ref: "#/components/parameters/product_uuid"
+    post:
+      summary: add components to product
+      operationId: post-product-product_uuid-componts
+      responses:
+        "200":
+          description: Succesfull updated component to product
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    status: true
+                    message: added
+                    data:
+                      uuid: 9acbe1de-347d-4b86-828b-4945796b873f
+                      name: rog strix g17
+                      quantity: 420
+                      createdAt: "2023-05-05T07:28:57.094Z"
+                      updatedAt: "2023-05-05T07:28:57.094Z"
+                      components_used:
+                        - uuid: 6489f03c-32be-42be-9177-82220c1f913b
+                          name: rtx 3080
+                          description: best vga for laptop by nvidia
+                          product_components:
+                            uuid: 95ab52ed-679b-467a-909c-50087af28e43
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      quantity:
+                        type: integer
+                      components_used:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            uuid:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            product_components:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                  format: uuid
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: 75nj27s4bs534
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: m0sqdzje00otv
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: zur8ztzqf09vl
+                        example: components_name must be array type!
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: fuowkdecelx3w
+                        default: false
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: y37hedbpxzfgg
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: umdolqm4n3bm6
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: waxfyku4di1cy
+                        example: please enter the registered component name at least 1!
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: 66h1uqp98b913
+                        default: false
+      tags:
+        - Products
+      description: add components to product
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                components_name:
+                  type: array
+                  items:
+                    type: string
+              x-examples:
+                Example 1:
+                  components_name:
+                    - keyboard steelseries
+  "/product/components_used/{product_component_uuid}":
+    parameters:
+      - $ref: "#/components/parameters/product_component_uuid"
+    delete:
+      summary: delete component used in product
+      operationId: delete-product-components_used-product_component_uuid
+      responses:
+        "200":
+          description: Succesfull deleted component used in product
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: m7n49v282bx1x
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: 13ebf66h2fafn
+                        example: "null"
+                        nullable: true
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Wrapper"
+                  - type: object
+                    x-stoplight:
+                      id: zvuo73tb8bk4j
+                    properties:
+                      data:
+                        type: string
+                        x-stoplight:
+                          id: w2zxfh79f0hx4
+                        example: "null"
+                        nullable: true
+                      message:
+                        type: string
+                        x-stoplight:
+                          id: a9atkavzepxsn
+                        example: "can't find product component with id ${product_component_uuid}!"
+                      status:
+                        type: boolean
+                        x-stoplight:
+                          id: 9hlqmxa86g9si
+                        default: false
+      tags:
+        - Products
+      description: delete component used in product
+      security:
+        - Authorization: []
+components:
+  schemas:
+    User:
+      type: object
+      x-examples: {}
+      description: User data for access api endpoint
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    Supplier:
+      type: object
+      x-examples:
+        Example 1:
+          uuid: bc4636e0-6dee-4abb-be6b-833da7ef0c63
+          name: nvidia
+          address: jakarta barat
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+    Wrapper:
+      type: object
+      x-examples:
+        Example 1:
+          status: true
+          message: success
+      properties:
+        status:
+          type: boolean
+          default: true
+        message:
+          type: string
+          example: success
+      description: ""
+    Component:
+      type: object
+      x-examples:
+        Example 1:
+          uuid: 6489f03c-32be-42be-9177-82220c1f913b
+          name: rtx 3080
+          description: best vga for laptop by nvidia
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+    Product:
+      type: object
+      x-examples:
+        Example 1:
+          uuid: 76bdd110-a98e-46fc-b806-a984e8ca6919
+          name: rog strix g13
+          quantity: 200
+      description: product model schema
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+  responses:
+    Unauthorized:
+      description: Unauthorized!
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: false
+                message: Unauthorized!
+                data: null
+            properties:
+              status:
+                type: boolean
+                default: false
+              message:
+                type: string
+                example: Unauthorized!
+                default: Unauthorized!
+              data:
+                type: string
+                example: "null"
+                nullable: true
+    Foribiden:
+      description: Forbiden Access!
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: false
+                message: Forbiden Access!
+                data: null
+            properties:
+              status:
+                type: boolean
+                default: false
+              message:
+                type: string
+                example: Forbiden Access!
+                default: Forbiden Access!
+              data:
+                type: string
+                example: "null"
+                nullable: true
+    Credential:
+      description: Credential not found!
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: false
+                message: credential not found!
+                data: null
+            properties:
+              status:
+                type: boolean
+                default: false
+              message:
+                type: string
+                example: credential not found!
+                default: credential not found!
+              data:
+                type: string
+                example: "null"
+                nullable: true
+  requestBodies:
+    Supplier:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                name: nvidia
+                address: jakarta barat
+            properties:
+              name:
+                type: string
+                example: nvidia
+              address:
+                type: string
+                example: jakarta
+    Component:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+            x-examples:
+              Example 1:
+                name: rtx 3080
+                description: best vga for laptop by nvidia
+    Product:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                name: rog strix g13
+                quantity: 200
+                components_name:
+                  - rtx 3080
+            properties:
+              name:
+                type: string
+              quantity:
+                type: integer
+                minimum: 0
+              components_name:
+                type: array
+                items:
+                  type: string
+  parameters:
+    supplier_uuid:
+      name: supplier_uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of supplier
+    supplied_components_uuid:
+      name: supplied_components_uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of supplied components
+    component_uuid:
+      name: component_uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of component
+    product_uuid:
+      name: product_uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of product
+    product_component_uuid:
+      name: product_component_uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of product component
+tags:
+  - name: Auth
+  - name: Components
+  - name: Products
+  - name: Suppliers

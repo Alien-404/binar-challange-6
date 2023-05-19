@@ -1,0 +1,17 @@
+[
+  {
+    "uuid": "bc4636e0-6dee-4abb-be6b-833da7ef0c63",
+    "name": "test supplier",
+    "address": "jakarta barat",
+    "supplied_components": [
+      {
+        "uuid": "6489f03c-32be-42be-9177-82220c1f913b",
+        "name": "rtx 1234",
+        "description": "best vga for laptop by supplier",
+        "component_suppliers": {
+          "uuid": "7d85ebaa-b52f-4360-93f3-4c4b9e434a51"
+        }
+      }
+    ]
+  }
+]
