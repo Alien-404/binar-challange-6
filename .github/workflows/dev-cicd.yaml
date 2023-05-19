@@ -20,6 +20,10 @@ jobs:
       - name: Install packages
         run: npm install
 
+      - name: Set up environment
+        run: |
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+
       - name: Run test
         run: npm test
 
