@@ -1,33 +1,43 @@
-# Challange 6 - Binar BEJS
+# Repository Challenge 7
 
-Repo ini merupakan pengembangan lanjutan dari projek "challenge-5" dengan penambahan beberapa fitur baru:
+Repository ini berisi implementasi Challenge 7, yang fokus pada penambahan fitur baru dan perbaikan pada sistem autentikasi.
 
-- Penambahan fitur testing menggunakan Jest dan Supertest untuk memastikan kualitas kode.
-- Implementasi CI/CD menggunakan GitHub Actions untuk otomatisasi proses pengembangan dan produksi di Railway.
-- Penggunaan Sentry untuk fitur debugging dan logging.
+## Fitur
 
-## Fitur Baru
+### Who Am I
 
-### Testing menggunakan Jest dan Supertest
+- Route: `auth/whoami`
+- Deskripsi: Mengembalikan informasi dari pengguna yang sedang terautentikasi. Endpoint ini memungkinkan pengguna untuk mendapatkan informasi profil mereka sendiri.
 
-Fitur testing telah ditambahkan menggunakan Jest dan Supertest untuk memastikan bahwa kode yang dikembangkan berfungsi sebagaimana mestinya. Dalam pengujian, mock data dari Jest digunakan untuk mengisolasi dan menjalankan pengujian pada fungsi-fungsi yang menggunakan ORM Sequelize.
+### Update Avatar
 
-![testing](https://drive.google.com/uc?id=1LSPc4OGYYQ7gffgt_O5fAp7yuUjNe4HD)
+- Route: `auth/update-avatar`
+- Deskripsi: Memungkinkan pengguna untuk mengupdate avatar profil mereka dengan mengunggah gambar baru.
 
-### CI/CD dengan GitHub Actions
+### Google OAuth
 
-Proyek ini telah diintegrasikan dengan GitHub Actions untuk otomatisasi CI/CD. Terdapat dua job yang dijalankan:
+- Route: `auth/oauth`
+- Deskripsi: Menyediakan autentikasi melalui Google OAuth. Pengguna dapat masuk menggunakan akun Google mereka.
 
-1. **Development (Dev)**: Setiap kali terjadi push ke branch `development`, GitHub Actions akan menjalankan job untuk testing dan melakukan deployment ke environment development di Railway dan dapat diakses melalui link: [https://manufaktur-dev.rinaru.com](https://manufaktur-dev.rinaru.com).
+### Notifikasi Email untuk Registrasi melalui OAuth
 
-![ci/cd dev](https://drive.google.com/uc?id=1GnZYfsQ0Y8QdgSFiOXKkn8C-gRHhezHY)
+- Deskripsi: Ketika pengguna berhasil mendaftar menggunakan Google OAuth, notifikasi email dikirimkan kepada pengguna untuk success message.
 
-2. **Production (Prod)**: Setiap kali terjadi pull request ke branch `master`, GitHub Actions akan menjalankan job untuk testing dan melakukan deployment ke environment production di Railway. Jika terjadi kesalahan dalam proses testing atau deployment, merge request tidak akan dapat dilakukan, sehingga memastikan bahwa kode yang akan digabungkan ke branch master telah lulus pengujian dan dinyatakan siap untuk production. untuk hasilnya dapat diakses melalui link: [https://manufaktur-prod.rinaru.com](https://manufaktur-prod.rinaru.com).
+### Verifikasi Email untuk Registrasi Dasar
 
-![ci/cd prod](https://drive.google.com/uc?id=1MyHEvV6CSfPN3TnES4mL5M2HG3_g-3-V)
+- Deskripsi: Bagi pengguna yang mendaftar menggunakan formulir pendaftaran dasar, proses verifikasi email diterapkan untuk memastikan verified alamat email yang diberikan.
 
-### Sentry untuk Debugging dan Logging
+### Role-Based Access Control (RBAC)
 
-Sentry telah diimplementasikan dalam kode untuk membantu dalam proses debugging dan logging. Setiap kali terjadi kesalahan pada aplikasi, pesan kesalahan akan dikirim ke Sentry untuk analisis dan pelacakan.
+- Deskripsi: Role-Based Access Control (RBAC) diterapkan untuk semua endpoint kecuali endpoint `auth`. Administrator memiliki akses penuh, sementara pengguna biasa memiliki akses terbatas berdasarkan peran mereka.
 
-![sentry](https://drive.google.com/uc?id=1sGxXn2c6J99Yg2cFEwCedyHVfqZEgHo3)
+## Akun Admin
+
+- Email: admin@gmail.com
+- Password: admin123
+
+Silakan membuat akun user role basic jika ingin mencoba nya.
+
+link development : [https://manufaktur-dev.rinaru.com](https://manufaktur-dev.rinaru.com).
+
+link production : [https://manufaktur-prod.rinaru.com](https://manufaktur-prod.rinaru.com).

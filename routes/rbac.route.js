@@ -1,4 +1,4 @@
-const component = require('../controllers/component.controller');
+const { roleaccess, roles, modules } = require('../controllers/rbac');
 const { rbacHandler } = require('../middleware');
 const { rbacModule } = require('../utils/enum');
 
@@ -6,31 +6,40 @@ const { rbacModule } = require('../utils/enum');
 require('dotenv').config();
 const router = require('express').Router();
 
-// GET
+// role
 router.get(
-  '/',
+  '/roles',
   rbacHandler(rbacModule.authorization, true, false),
-  component.show
-);
-router.get(
-  '/:component_uuid',
-  rbacHandler(rbacModule.authorization, true, false),
-  component.index
+  roles.index
 );
 router.post(
-  '/',
+  '/roles',
   rbacHandler(rbacModule.authorization, true, true),
-  component.store
+  roles.store
 );
-router.put(
-  '/:component_uuid',
-  rbacHandler(rbacModule.authorization, true, true),
-  component.update
+
+// module
+router.get(
+  '/modules',
+  rbacHandler(rbacModule.authorization, true, false),
+  modules.index
 );
-router.delete(
-  '/:component_uuid',
+router.post(
+  '/modules',
   rbacHandler(rbacModule.authorization, true, true),
-  component.destroy
+  modules.store
+);
+
+// role access
+router.get(
+  '/roleaccess',
+  rbacHandler(rbacModule.authorization, true, false),
+  roleaccess.index
+);
+router.post(
+  '/roleaccess',
+  rbacHandler(rbacModule.authorization, true, true),
+  roleaccess.store
 );
 
 module.exports = router;

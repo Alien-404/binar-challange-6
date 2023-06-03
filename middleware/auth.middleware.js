@@ -17,6 +17,16 @@ const authMiddleware = (req, res, next) => {
         });
       }
 
+      // Check if the token has expired
+      // const currentTimestamp = Math.floor(Date.now() / 1000);
+      // if (token.exp < currentTimestamp) {
+      //   return res.status(401).json({
+      //     status: false,
+      //     message: 'Token has expired!',
+      //     data: null,
+      //   });
+      // }
+
       req.user = user;
       next();
     });
