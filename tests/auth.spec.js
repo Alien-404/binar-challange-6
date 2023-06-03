@@ -1,10 +1,10 @@
 const app = require('../app');
 const request = require('supertest');
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { User } = require('../db/models');
 
 // mock sequelize
-jest.mock('../models');
+jest.mock('../db/models');
 
 // users mock
 const mockUser = require('../utils/mocks/user.json');

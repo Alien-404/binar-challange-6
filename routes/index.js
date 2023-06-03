@@ -7,6 +7,7 @@ const authRouter = require('./auth.route');
 const componentRouter = require('./component.route');
 const productRouter = require('./product.route');
 const supplierRouter = require('./supplier.route');
+const rbacRouter = require('./rbac.route');
 
 // middleware
 const { authHandler } = require('../middleware');
@@ -25,5 +26,8 @@ router.use('/product', productRouter);
 
 // supplier route
 router.use('/supplier', supplierRouter);
+
+// rbac route
+router.use('/rbac', rbacRouter);
 
 module.exports = router;

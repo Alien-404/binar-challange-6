@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to our platform!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .card {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4caf50; /* Ubah warna menjadi hijau */
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .btn:hover {
+        background-color: #45a049; /* Ubah warna menjadi hijau yang lebih gelap saat hover */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>Welcome to our platform!</h1>
+        <p>Dear <%- user.name %>,</p>
+        <p>
+          Thank you for joining our platform. We are excited to have you as a
+          member of our community.
+        </p>
+        <p>
+          To get started, please click the button below to verify your email:
+        </p>
+        <p>
+          <a
+            class="btn"
+            href="<%= user.verify_url %>"
+            style="
+              background-color: #4caf50;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 4px;
+              padding: 10px 20px;
+              transition: background-color 0.3s;
+            "
+            >Verify Email</a
+          >
+        </p>
+        <p>
+          After verifying your email, you will be able to log in to our platform
+          and access all its features.
+        </p>
+        <p>
+          If you have any questions or need assistance, feel free to contact me.
+        </p>
+        <p>Best regards,</p>
+        <p>Rinaru | Rico</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -6,6 +6,7 @@ module.exports = {
       uuid: {
         allowNull: false,
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
       name: {
@@ -17,8 +18,32 @@ module.exports = {
         type: Sequelize.STRING,
       },
       password: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      role_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      user_type: {
         allowNull: false,
         type: Sequelize.STRING,
+      },
+      profile_url: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      isActive: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
+      activationToken: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      activationExpires: {
+        allowNull: true,
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,

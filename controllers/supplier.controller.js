@@ -1,4 +1,4 @@
-const { suppliers, components, component_suppliers } = require('../models');
+const { suppliers, components, component_suppliers } = require('../db/models');
 
 module.exports = {
   store: async (req, res, next) => {

@@ -1,4 +1,4 @@
-const { suppliers, components } = require('../models');
+const { suppliers, components } = require('../db/models');
 
 module.exports = {
   show: async (req, res, next) => {

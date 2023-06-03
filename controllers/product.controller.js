@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { products, components, product_components } = require('../models');
+const { products, components, product_components } = require('../db/models');
 
 module.exports = {
   show: async (req, res, next) => {

@@ -1,10 +1,10 @@
 const app = require('../app');
 const request = require('supertest');
-const { components } = require('../models');
+const { components } = require('../db/models');
 const getAuthToken = require('../utils/getAuth.mock');
 
 // mock sequelize
-jest.mock('../models');
+jest.mock('../db/models');
 
 const mockComponent = require('../utils/mocks/component.json');
 

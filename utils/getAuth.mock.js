@@ -1,6 +1,6 @@
 const app = require('../app');
 const request = require('supertest');
-const { User } = require('../models');
+const { User } = require('../db/models');
 const bcrypt = require('bcrypt');
 
 // Mock user data
